@@ -15,9 +15,9 @@ namespace ExcelParser
 {
     internal class ExcelWrapper : IDisposable
     {
-        public ExcelWrapper(string fileName)
+        public ExcelWrapper(string fileName, bool readOnly = true)
         {
-            OpenFile(fileName);
+            OpenFile(fileName, readOnly);
         }
 
         public string ReadCell(string sheetName, string cellName)
@@ -126,7 +126,7 @@ namespace ExcelParser
         };
         private Workbook _workbook;
 
-        private void OpenFile(string fileName)
+        private void OpenFile(string fileName, bool readOnly)
         {
             var finfo = new FileInfo(fileName);
             if (!finfo.Exists)
@@ -134,7 +134,7 @@ namespace ExcelParser
                 throw new FileNotFoundException($"Cannot found \"{finfo.FullName}\".");
             }
 
-            _workbook = _app.Workbooks.Open(finfo.FullName);
+            _workbook = _app.Workbooks.Open(finfo.FullName, ReadOnly: readOnly);
         }
 
         private void ReleaseComObjects(params object[] comObjects)
